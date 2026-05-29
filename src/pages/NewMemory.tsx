@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { MoodForm } from '../components/MoodForm';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useMemoryStore } from '../store/memoryStore';
 import type { Feeling } from '../types';
 
 export const NewMemory = () => {
-  const { memories, setMemories } = useLocalStorage();
+  const { addMemory } = useMemoryStore();
   const navigate = useNavigate();
 
   const handleSave = (id: string | undefined, text: string, date: Date, feelings: Feeling[], tags: string[]) => {
@@ -15,7 +15,7 @@ export const NewMemory = () => {
       feelings,
       tags,
     };
-    setMemories([...memories, newMemory]);
+    addMemory(newMemory);
     navigate('/feed');
   };
 

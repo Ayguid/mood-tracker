@@ -1,17 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { useLocalStorageTags } from '../hooks/useLocalStorageTags';
+import { useMemoryStore } from '../store/memoryStore';
+import { useTagStore } from '../store/tagStore';
 
 export const Feed = () => {
-  const { memories, setMemories } = useLocalStorage();
-  const { tags } = useLocalStorageTags();
+  const { memories, deleteMemory } = useMemoryStore();
+  const { tags } = useTagStore();
   const navigate = useNavigate();
+
   const sorted = [...memories].sort((a, b) => b.date.getTime() - a.date.getTime());
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this memory? This cannot be undone.')) {
-      const newMemories = memories.filter(m => m.id !== id);
-      setMemories(newMemories);
+      deleteMemory(id);
     }
   };
 
@@ -22,15 +22,20 @@ export const Feed = () => {
   return (
     <div>
       <h2>Your memories</h2>
-      {sorted.map(m => {
-        // Resolver los nombres de los tags a partir de los IDs guardados
-        const memoryTags = m.tags.map(tagId => tags.find(t => t.id === tagId)).filter(Boolean);
+      {sorted.map((memory) => {
+        // Resolver nombres de tags a partir de los IDs guardados
+        const memoryTags = memory.tags
+          .map(tagId => tags.find(t => t.id === tagId))
+          .filter(Boolean);
+
         return (
-          <div key={m.id} className="card">
-            <div className="card-title">{m.date.toLocaleDateString()}</div>
-            <div className="card-text">{m.text}</div>
-            {m.feelings.length > 0 && (
-              <div><strong>Feelings:</strong> {m.feelings.map(f => `${f.emoji} ${f.label}`).join(', ')}</div>
+          <div key={memory.id} className="card">
+            <div className="card-title">{memory.date.toLocaleDateString()}</div>
+            <div className="card-text">{memory.text}</div>
+            {memory.feelings.length > 0 && (
+              <div>
+                <strong>Feelings:</strong> {memory.feelings.map(f => `${f.emoji} ${f.label}`).join(', ')}
+              </div>
             )}
             {memoryTags.length > 0 && (
               <div style={{ marginTop: '0.5rem' }}>
@@ -38,8 +43,8 @@ export const Feed = () => {
               </div>
             )}
             <div className="card-footer">
-              <button onClick={() => navigate(`/edit/${m.id}`)} className="btn btn-edit">Edit</button>
-              <button onClick={() => handleDelete(m.id)} className="btn btn-delete">Delete</button>
+              <button onClick={() => navigate(`/edit/${memory.id}`)} className="btn btn-edit">Edit</button>
+              <button onClick={() => handleDelete(memory.id)} className="btn btn-delete">Delete</button>
             </div>
           </div>
         );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Feeling } from '../types';
 import { baseFeelings } from '../data/feelings';
 import { FeelingSelector } from './FeelingSelector';
-import { useLocalStorageTags } from '../hooks/useLocalStorageTags';
+import { useTagStore } from '../store/tagStore'; // Importar el store de tags
 
 interface MoodFormProps {
   onSave: (id: string | undefined, text: string, date: Date, feelings: Feeling[], tags: string[]) => void;
@@ -23,7 +23,7 @@ export const MoodForm = ({
   initialTags = [],
   submitLabel = 'Save Memory'
 }: MoodFormProps) => {
-  const { tags: allTags } = useLocalStorageTags();
+  const { tags: allTags } = useTagStore(); // Obtener tags globales desde Zustand
 
   const [formData, setFormData] = useState({
     text: initialText,

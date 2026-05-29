@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { useLocalStorageTags } from '../hooks/useLocalStorageTags';
+import { useTagStore } from '../store/tagStore';
 
 export const Tags = () => {
-  const { tags, setTags } = useLocalStorageTags();
+  const { tags, addTag, editTag, deleteTag } = useTagStore();
   const [newTagLabel, setNewTagLabel] = useState('');
   const [editingTag, setEditingTag] = useState<{ id: string; label: string } | null>(null);
 
-  const addTag = () => {
-    const label = newTagLabel.trim();
-    if (label === '') return;
-    const newTag = { id: crypto.randomUUID(), label };
-    setTags([...tags, newTag]);
+  const handleAddTag = () => {
+    addTag(newTagLabel);
     setNewTagLabel('');
   };
 
@@ -20,15 +17,13 @@ export const Tags = () => {
 
   const saveEdit = () => {
     if (!editingTag) return;
-    const newLabel = editingTag.label.trim();
-    if (newLabel === '') return;
-    setTags(tags.map(t => t.id === editingTag.id ? { ...t, label: newLabel } : t));
+    editTag(editingTag.id, editingTag.label);
     setEditingTag(null);
   };
 
-  const deleteTag = (id: string) => {
+  const handleDelete = (id: string) => {
     if (window.confirm('Delete this tag? It will be removed from all memories.')) {
-      setTags(tags.filter(t => t.id !== id));
+      deleteTag(id);
     }
   };
 
@@ -39,20 +34,22 @@ export const Tags = () => {
         <input
           type="text"
           value={newTagLabel}
-          onChange={e => setNewTagLabel(e.target.value)}
+          onChange={(e) => setNewTagLabel(e.target.value)}
           placeholder="New tag name"
         />
-        <button onClick={addTag}>Add Tag</button>
+        <button onClick={handleAddTag}>Add Tag</button>
       </div>
       <ul style={{ listStyle: 'none', padding: 0 }}>
-        {tags.map(tag => (
+        {tags.map((tag) => (
           <li key={tag.id} style={{ marginBottom: '0.5rem' }}>
             {editingTag?.id === tag.id ? (
               <>
                 <input
                   type="text"
                   value={editingTag.label}
-                  onChange={e => setEditingTag({ ...editingTag, label: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTag({ ...editingTag, label: e.target.value })
+                  }
                   autoFocus
                 />
                 <button onClick={saveEdit}>Save</button>
@@ -62,7 +59,7 @@ export const Tags = () => {
               <>
                 <span style={{ marginRight: '0.5rem' }}>{tag.label}</span>
                 <button onClick={() => startEdit(tag)}>Edit</button>
-                <button onClick={() => deleteTag(tag.id)}>Delete</button>
+                <button onClick={() => handleDelete(tag.id)}>Delete</button>
               </>
             )}
           </li>
