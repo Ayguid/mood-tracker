@@ -7,12 +7,31 @@ export const Feed = () => {
   const { tags } = useTagStore();
   const navigate = useNavigate();
 
-  const sorted = [...memories].sort((a, b) => b.date.getTime() - a.date.getTime());
+  // Asegurar que las fechas son objetos Date (solución temporal)
+  const sorted = [...memories]
+    .map(m => ({ ...m, date: new Date(m.date) }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this memory? This cannot be undone.')) {
       deleteMemory(id);
     }
+  };
+
+  // Función compacta para mostrar jerarquía con flechas
+  const formatFeelings = (feelings: typeof memories[0]['feelings']) => {
+    const roots = feelings.filter(f => f.parent_id === null);
+    return roots.map(root => {
+      let path = `${root.emoji} ${root.label}`;
+      let current = root;
+      while (true) {
+        const child = feelings.find(f => f.parent_id === current.id);
+        if (!child) break;
+        path += ` → ${child.emoji} ${child.label}`;
+        current = child;
+      }
+      return path;
+    }).join(', ');
   };
 
   if (sorted.length === 0) {
@@ -23,7 +42,6 @@ export const Feed = () => {
     <div>
       <h2>Your memories</h2>
       {sorted.map((memory) => {
-        // Resolver nombres de tags a partir de los IDs guardados
         const memoryTags = memory.tags
           .map(tagId => tags.find(t => t.id === tagId))
           .filter(Boolean);
@@ -34,7 +52,7 @@ export const Feed = () => {
             <div className="card-text">{memory.text}</div>
             {memory.feelings.length > 0 && (
               <div>
-                <strong>Feelings:</strong> {memory.feelings.map(f => `${f.emoji} ${f.label}`).join(', ')}
+                <strong>Feelings:</strong> {formatFeelings(memory.feelings)}
               </div>
             )}
             {memoryTags.length > 0 && (

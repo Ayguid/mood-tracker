@@ -33,10 +33,6 @@ export const FeelingSelector = ({
     return true; // en modo 'disable' se muestran todas
   });
 
-  const handleRootChange = (newSelected: FeelingType[]) => {
-    onChange(newSelected);
-  };
-
   return (
     <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
       <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>
@@ -49,12 +45,6 @@ export const FeelingSelector = ({
       </label>
       <div>
         {visibleRoots.map(root => {
-          // Para modo 'disable', renderizamos Feeling con limitBehavior, pero el Feeling ya maneja la lógica de deshabilitado.
-          // Sin embargo, aquí debemos pasarle una función onChange que evite selecciones no permitidas.
-          // El componente Feeling ya verificará canSelect basado en el límite de hermanos (para raíz, hermanos son otras raíces).
-          // Pero la lógica de límite de raíces actualmente no está implementada dentro de Feeling (solo maneja hijos).
-          // Por lo tanto, debemos manejar el límite de raíces en este nivel.
-          // Voy a envolver onChange para filtrar selecciones que excedan maxRoots.
           const handleRootToggle = (newSelected: FeelingType[]) => {
             // Verificar que no se exceda maxRoots
             const newRootCount = newSelected.filter(f => f.parent_id === null).length;
