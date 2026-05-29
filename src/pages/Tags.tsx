@@ -4,8 +4,7 @@ import { useLocalStorageTags } from '../hooks/useLocalStorageTags';
 export const Tags = () => {
   const { tags, setTags } = useLocalStorageTags();
   const [newTagLabel, setNewTagLabel] = useState('');
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editLabel, setEditLabel] = useState('');
+  const [editingTag, setEditingTag] = useState<{ id: string; label: string } | null>(null);
 
   const addTag = () => {
     const label = newTagLabel.trim();
@@ -15,16 +14,16 @@ export const Tags = () => {
     setNewTagLabel('');
   };
 
-  const startEdit = (id: string, currentLabel: string) => {
-    setEditingId(id);
-    setEditLabel(currentLabel);
+  const startEdit = (tag: { id: string; label: string }) => {
+    setEditingTag({ id: tag.id, label: tag.label });
   };
 
-  const saveEdit = (id: string) => {
-    const newLabel = editLabel.trim();
+  const saveEdit = () => {
+    if (!editingTag) return;
+    const newLabel = editingTag.label.trim();
     if (newLabel === '') return;
-    setTags(tags.map(t => t.id === id ? { ...t, label: newLabel } : t));
-    setEditingId(null);
+    setTags(tags.map(t => t.id === editingTag.id ? { ...t, label: newLabel } : t));
+    setEditingTag(null);
   };
 
   const deleteTag = (id: string) => {
@@ -48,21 +47,21 @@ export const Tags = () => {
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {tags.map(tag => (
           <li key={tag.id} style={{ marginBottom: '0.5rem' }}>
-            {editingId === tag.id ? (
+            {editingTag?.id === tag.id ? (
               <>
                 <input
                   type="text"
-                  value={editLabel}
-                  onChange={e => setEditLabel(e.target.value)}
+                  value={editingTag.label}
+                  onChange={e => setEditingTag({ ...editingTag, label: e.target.value })}
                   autoFocus
                 />
-                <button onClick={() => saveEdit(tag.id)}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
+                <button onClick={saveEdit}>Save</button>
+                <button onClick={() => setEditingTag(null)}>Cancel</button>
               </>
             ) : (
               <>
                 <span style={{ marginRight: '0.5rem' }}>{tag.label}</span>
-                <button onClick={() => startEdit(tag.id, tag.label)}>Edit</button>
+                <button onClick={() => startEdit(tag)}>Edit</button>
                 <button onClick={() => deleteTag(tag.id)}>Delete</button>
               </>
             )}
