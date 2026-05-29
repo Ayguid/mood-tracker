@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useLocalStorageTags } from '../hooks/useLocalStorageTags';
 
 export const Feed = () => {
   const { memories, setMemories } = useLocalStorage();
+  const { tags } = useLocalStorageTags();
   const navigate = useNavigate();
   const sorted = [...memories].sort((a, b) => b.date.getTime() - a.date.getTime());
 
@@ -20,23 +22,28 @@ export const Feed = () => {
   return (
     <div>
       <h2>Your memories</h2>
-      {sorted.map(m => (
-        <div key={m.id} style={{ border: '1px solid #ddd', marginBottom: '1rem', padding: '1rem' }}>
-          <small>{m.date.toLocaleDateString()}</small>
-          <p>{m.text}</p>
-          {m.feelings.length > 0 && (
-            <div>
-              <strong>Feelings:</strong> {m.feelings.map(f => `${f.emoji} ${f.label}`).join(', ')}
+      {sorted.map(m => {
+        // Resolver los nombres de los tags a partir de los IDs guardados
+        const memoryTags = m.tags.map(tagId => tags.find(t => t.id === tagId)).filter(Boolean);
+        return (
+          <div key={m.id} className="card">
+            <div className="card-title">{m.date.toLocaleDateString()}</div>
+            <div className="card-text">{m.text}</div>
+            {m.feelings.length > 0 && (
+              <div><strong>Feelings:</strong> {m.feelings.map(f => `${f.emoji} ${f.label}`).join(', ')}</div>
+            )}
+            {memoryTags.length > 0 && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <strong>Tags:</strong> {memoryTags.map(tag => `#${tag!.label}`).join(' ')}
+              </div>
+            )}
+            <div className="card-footer">
+              <button onClick={() => navigate(`/edit/${m.id}`)} className="btn btn-edit">Edit</button>
+              <button onClick={() => handleDelete(m.id)} className="btn btn-delete">Delete</button>
             </div>
-          )}
-          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-            <button onClick={() => navigate(`/edit/${m.id}`)}>Edit</button>
-            <button onClick={() => handleDelete(m.id)} style={{ backgroundColor: '#ff4444', color: 'white' }}>
-              Delete
-            </button>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

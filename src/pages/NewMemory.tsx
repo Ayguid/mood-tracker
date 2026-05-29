@@ -7,13 +7,13 @@ export const NewMemory = () => {
   const { memories, setMemories } = useLocalStorage();
   const navigate = useNavigate();
 
-  const handleSave = (id: string | undefined, text: string, date: Date, feelings: Feeling[]) => {
+  const handleSave = (id: string | undefined, text: string, date: Date, feelings: Feeling[], tags: string[]) => {
     const newMemory = {
       id: crypto.randomUUID(),
       date,
       text,
       feelings,
-      tags: [],
+      tags,
     };
     setMemories([...memories, newMemory]);
     navigate('/feed');

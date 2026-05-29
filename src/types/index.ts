@@ -13,3 +13,8 @@ export interface Memory {
   feelings: Feeling[];
   tags: string[];
 }
+
+export interface Tag  {
+  id: string;
+  label: string;
+}

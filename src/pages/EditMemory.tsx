@@ -13,9 +13,9 @@ export const EditMemory = () => {
     return <p>Memory not found. <a href="/feed">Go back</a></p>;
   }
 
-  const handleSave = (id: string | undefined, text: string, date: Date, feelings: Feeling[]) => {
+  const handleSave = (id: string | undefined, text: string, date: Date, feelings: Feeling[], tags: string[]) => {
     if (!id) return;
-    const updatedMemory = { ...memory, text, date, feelings };
+    const updatedMemory = { ...memory, text, date, feelings, tags };
     const newMemories = memories.map(m => m.id === id ? updatedMemory : m);
     setMemories(newMemories);
     navigate('/feed');
@@ -27,6 +27,7 @@ export const EditMemory = () => {
       initialText={memory.text}
       initialDate={memory.date}
       initialFeelings={memory.feelings}
+      initialTags={memory.tags}
       submitLabel="Update Memory"
       onSave={handleSave}
     />

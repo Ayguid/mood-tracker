@@ -49,8 +49,6 @@ export const FeelingSelector = ({
       </label>
       <div>
         {visibleRoots.map(root => {
-          const isSelected = selectedRoots.some(sr => sr.id === root.id);
-          const isSelectable = isSelected || canSelectMoreRoots;
           // Para modo 'disable', renderizamos Feeling con limitBehavior, pero el Feeling ya maneja la lógica de deshabilitado.
           // Sin embargo, aquí debemos pasarle una función onChange que evite selecciones no permitidas.
           // El componente Feeling ya verificará canSelect basado en el límite de hermanos (para raíz, hermanos son otras raíces).

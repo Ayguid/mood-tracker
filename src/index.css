@@ -1,5 +1,239 @@
-body {
-  font-family: system-ui, sans-serif;
+/* Variables y reset */
+:root {
+  --bg-page: #f4f6f9;
+  --card-bg: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-light: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --color-green: #10b981;
+  --color-blue: #3b82f6;
+  --color-red: #ef4444;
+  --color-gray: #9ca3af;
+}
+
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Navegación */
+.nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--color-blue);
+  font-weight: 500;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+/* Tarjetas */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 1rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-title {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* Formulario */
+.form-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary {
+  background: var(--color-blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-edit {
+  background: var(--color-gray);
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #6b7280;
+}
+
+.btn-delete {
+  background: var(--color-red);
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+/* Selector de sentimientos */
+.feeling-root {
+  display: block;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.5rem;
+}
+
+.feeling-btn {
+  background: #f3f4f6;
+  border: 1px solid var(--border-light);
+  border-radius: 2rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.feeling-btn.selected {
+  background: var(--color-green);
+  color: white;
+  border-color: var(--color-green);
+}
+
+.feeling-child-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 1.5rem;   /* ya lo tienes */
+}
+
+.feeling-child-btn {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: 1.5rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+}
+
+.feeling-child-btn.selected {
+  background: #fef08a;
+  border-color: #eab308;
+}
+
+.feeling-child-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mensaje vacío */
+.empty-message {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-top: 2rem;
+}
+
+.badge {
+  font-size: 0.7rem;
+  background-color: #333;
+  color: white;
+  border-radius: 1rem;
+  padding: 0 0.4rem;
+  margin-left: 0.25rem;
+  display: inline-block;
+}
+
+.feeling-count {
+  font-size: 0.7rem;
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  border-radius: 1rem;
+  padding: 0 0.4rem;
+  margin-left: 0.25rem;
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  display: block;
 }

@@ -80,55 +80,40 @@ export const Feeling = ({
 
   if (!shouldShow()) return null;
 
-  const containerStyle = {
-    marginLeft: level > 0 ? '1.5rem' : '0',
-    marginTop: '0.5rem',
-    marginBottom: '0.5rem',
-    borderLeft: level > 0 ? '2px solid #e0e0e0' : 'none',
-    paddingLeft: level > 0 ? '1rem' : '0',
-  };
-
-  const buttonStyle = {
-    backgroundColor: isSelected ? '#c8e6c9' : '#f5f5f5',
-    border: '1px solid #ccc',
-    borderRadius: '24px',
-    padding: '0.3rem 1rem',
-    cursor: canSelect ? 'pointer' : 'not-allowed',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    fontSize: '0.9rem',
-    transition: 'all 0.2s',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-    opacity: (!canSelect && limitBehavior === 'disable') ? 0.5 : 1,
-  };
+ 
 
   return (
-    <div style={containerStyle}>
+    <div style={{ marginLeft: level > 0 ? `${level * 1.5}rem` : '0' }}>
       <button
         type="button"
         onClick={toggleFeeling}
-        style={buttonStyle}
+        className={`feeling-btn ${isSelected ? 'selected' : ''}`}
         disabled={!canSelect && limitBehavior === 'disable'}
+        style={{
+          backgroundColor: `hsl(${level * 30}, 70%, 85%)`,
+          border: '1px solid #ccc',
+          borderRadius: '24px',
+          padding: '0.3rem 1rem',
+          cursor: canSelect ? 'pointer' : 'not-allowed',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontSize: '0.9rem',
+          transition: 'all 0.2s',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+          opacity: (!canSelect && limitBehavior === 'disable') ? 0.5 : 1,
+        }}
       >
         {feeling.emoji} {feeling.label}
         {isSelected && selectedChildren.length > 0 && (
-          <span
-            style={{
-              fontSize: '0.7rem',
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              padding: '0 6px',
-              marginLeft: '4px',
-            }}
-          >
+          <span className="badge">
             {selectedChildren.length}/{childLimit}
           </span>
         )}
         {isSelected && <span> ✓</span>}
       </button>
       {isSelected && children.length > 0 && (
-        <div style={{ marginTop: '0.25rem' }}>
+        <div className="feeling-child-area">
           {children.map((child) => (
             <Feeling
               key={child.id}
